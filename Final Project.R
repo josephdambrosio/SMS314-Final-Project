@@ -40,11 +40,17 @@ S4newest_df <- data.frame(S2infl_df, S3recmb_df$'mean(sentiment)')
 S5clean_df <- S4newest_df %>%
   filter(from_user_friendcount > 0, from_user_followercount > 0)
 S5finalClean_df <- S5clean_df %>%
- mutate(sentiment = S3recmb_df..mean.sentiment..) %>%
+ mutate(sentiment_score = S3recmb_df..mean.sentiment..) %>%
   select(-c(S3recmb_df..mean.sentiment..))
-  
-  
-  
+# END stage five (clean up DF)
+
+# START stage 6 (create date)
+x6 <- S5finalClean_df$created_at
+x6_2 <- as.Date(x6)
+S6_FinalDF <- S5finalClean_df %>%
+  mutate(Date = x6_2) %>%
+  select(-c(created_at))
+# END stage 6 (create date)
   
   
   
