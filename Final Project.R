@@ -1,11 +1,12 @@
-#install dependancies 
-install.packages("sentimentr")
-install.packages("dplyr")
-install.packages("data.table")
+#install libs 
 library(sentimentr)
 library(dplyr)
 library(data.table)
 library(ggplot2)
+library(corrplot)
+library(tidytext)
+library(tidyr)
+
 
 # START Dataset Selection and DF Import
 file.choose()
@@ -53,26 +54,68 @@ S6_FinalDF <- S5finalClean_df %>%
   select(-c(created_at))
 # END stage 6 (create date)
   
-# START stage 7 (fist vis) NOT DONE
-ggplot(S6_FinalDF, aes(x = Date), color = "#000000") +
-  geom_bar()+
-  ggtitle("Barplot of Tweets about Will Smith")
+# STAGE 7 NOT DONE
+barplot(S6_FinalDF$Dates, main = "Change over time: Influence", type = "b")
 # END stage 7
 
-# START stage 8
+# START stage 8 (splitting DF and summarize by sentiment and influence)
 S8splitINFL_df <- S6_FinalDF %>%
   group_by(Date) %>%
   summarize(mean(influence))
 S8splitSNTMNT_df <- S6_FinalDF %>%
   group_by(Date) %>%
   summarize(mean(sentiment))
+# END stage 8
 
+# START stage 9 (Plot Change over time; sent & influ)
+plot(S8splitINFL_df, main = "Change over time: Influence", type = "b")
+plot(S8splitSNTMNT_df, main = "Change over time: Sentiment", type = "b")
+# END stage 9
 
+# START stage 10 (find top people)
+round(mean(S6_FinalDF$sentiment), 3)
+round(mean(S6_FinalDF$influence), 3)
+# END stage 10
 
+# START stage 11
+corrplot_df <- S6_FinalDF %>%
+  select(from_user_tweetcount, favorite_count, from_user_followercount, from_user_listed, influence, sentiment)
+corrplot(cor(corrplot_df), method = "number")
+# END stage 11
 
+# START stage 12
+S12topINFLR_df <- S6_FinalDF %>%
+  filter(influence > 2461)  #this will need to change for my dataset
+# END stage 12
 
+# START stage 13
+S13ngram_df <- S5finalClean_df %>%
+  filter(lang == "en") %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+# END stage 13
 
+# START stage 14
+fivegram <- function(x) {
+  library(dplyr)
+  library(tidytext)
+  library(tidyr)
+  bigram_number <- x %>%
+    unnest_tokens(bigram, text, token = "ngrams", n = 5)
+  z <- table(bigram_number$bigram)
+  z2 <- as.data.frame(z)
+  View(z2)}
 
+fivegram_eng <- function(x) {
+  library(dplyr)
+  library(tidytext)
+  library(tidyr)
+  bigram_number <- x %>%
+    filter(lang == "en") %>%
+    unnest_tokens(bigram, text, token = "ngrams", n = 5)
+  z <- table(bigram_number$bigram)
+  z2 <- as.data.frame(z)
+  View(z2)}
+# END stage 14
 
 
 
