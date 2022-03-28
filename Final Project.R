@@ -5,6 +5,7 @@ install.packages("data.table")
 library(sentimentr)
 library(dplyr)
 library(data.table)
+library(ggplot2)
 
 # START Dataset Selection and DF Import
 file.choose()
@@ -52,6 +53,29 @@ S6_FinalDF <- S5finalClean_df %>%
   select(-c(created_at))
 # END stage 6 (create date)
   
+# START stage 7 (fist vis) NOT DONE
+ggplot(S6_FinalDF, aes(x = Date), color = "#000000") +
+  geom_bar()+
+  ggtitle("Barplot of Tweets about Will Smith")
+# END stage 7
+
+# START stage 8
+S8splitINFL_df <- S6_FinalDF %>%
+  group_by(Date) %>%
+  summarize(mean(influence))
+S8splitSNTMNT_df <- S6_FinalDF %>%
+  group_by(Date) %>%
+  summarize(mean(sentiment))
+
+
+
+
+
+
+
+
+
+
   
   
   
