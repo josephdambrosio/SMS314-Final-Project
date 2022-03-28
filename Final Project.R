@@ -85,7 +85,7 @@ corrplot(cor(corrplot_df), method = "number")
 
 # START stage 12
 S12topINFLR_df <- S6_FinalDF %>%
-  filter(influence > 2461)  #this will need to change for my dataset
+  filter(influence > 2461)
 # END stage 12
 
 # START stage 13
@@ -104,7 +104,6 @@ fivegram <- function(x) {
   z <- table(bigram_number$bigram)
   z2 <- as.data.frame(z)
   View(z2)}
-
 fivegram_eng <- function(x) {
   library(dplyr)
   library(tidytext)
