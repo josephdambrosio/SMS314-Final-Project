@@ -35,20 +35,14 @@ S8splitINFL_df <- S6_FinalDF %>%
 S8splitSNTMNT_df <- S6_FinalDF %>%
   group_by(Date) %>%
   summarize(mean(sentiment_score))
-
-# START stage 9 (Plot Change over time; sent & influ)
 plot(S8splitINFL_df, main = "Change over time: Influence", type = "b")
 plot(S8splitSNTMNT_df, main = "Change over time: Sentiment", type = "b")
-# END stage 9
-
-# START stage 10 (find top people)
 round(mean(S6_FinalDF$sentiment), 3)
 round(mean(S6_FinalDF$influence), 3)
-# END stage 10
 
 # START stage 11
 corrplot_df <- S6_FinalDF %>%
-  select(from_user_tweetcount, favorite_count, from_user_followercount, from_user_listed, influence, sentiment)
+  select(from_user_tweetcount, favorite_count, from_user_followercount, from_user_listed, influence, sentiment_score)
 corrplot(cor(corrplot_df), method = "number")
 # END stage 11
 
