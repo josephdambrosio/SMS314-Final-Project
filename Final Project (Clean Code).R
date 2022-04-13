@@ -39,25 +39,24 @@ plot(S8splitINFL_df, main = "Change over time: Influence", type = "b")
 plot(S8splitSNTMNT_df, main = "Change over time: Sentiment", type = "b")
 round(mean(S6_FinalDF$sentiment), 3)
 round(mean(S6_FinalDF$influence), 3)
-
-# START stage 11
 corrplot_df <- S6_FinalDF %>%
   select(from_user_tweetcount, favorite_count, from_user_followercount, from_user_listed, influence, sentiment_score)
 corrplot(cor(corrplot_df), method = "number")
-# END stage 11
-
-# START stage 12
 S12topINFLR_df <- S6_FinalDF %>%
   filter(influence > 2461)
-# END stage 12
-
-# START stage 13
-S13ngram_df <- S5finalClean_df %>%
+text <- as.vector(S12topINFLR_df$text)
+text_df <- data_frame(line = 1:5, text = text)
+text_df2 <- text_df %>% unnest_tokens(word, text)
+text_df3 <- text_df2 %>% anti_join(stop_words) %>% count(word, sort = TRUE)
+text_df_NRC <- text_df3 %>% inner_join(get_sentiments("nrc"))
+text_df_NRC
+mean(text_df_NRC$value)
+S13bigram_df <- S5finalClean_df %>%
   filter(lang == "en") %>%
   unnest_tokens(bigram, text, token = "ngrams", n = 2)
-# END stage 13
-
-# START stage 14
+S13trigram_df <- S5finalClean_df %>%
+  filter(lang == "en") %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = 3)
 fivegram <- function(x) {
   library(dplyr)
   library(tidytext)
@@ -77,7 +76,6 @@ fivegram_eng <- function(x) {
   z <- table(bigram_number$bigram)
   z2 <- as.data.frame(z)
   View(z2)}
-# END stage 14
 
 
 
